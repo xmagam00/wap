@@ -1,97 +1,88 @@
-.desktop{
-	width: 1024px;
-	height: 800px;
-	background-color: #CACAFF;
-}
+/*
+Autor:Martin Maga(xmagam00)
+Projekt do predmetu WAP
+*/
+
 
 .window{
 	position: absolute;
-	width: 300px;
-	height: 300px;
-	background-color: #C2C2D6;
+	width: 250px;
+	height: 250px;
+	background-color: blue;
 }
 
-.windowTitle{
-	background-color: #5CADFF;
-	height: 32px;
+
+
+
+.ikona{
+	height: 25px !important;
+}
+
+.windowNew{
+	height: 39px;
+	width: 39px;
+	opacity: 0.9;
+	float: left;
+	background: white;
+}
+
+.hranica{
+	background-color: yellow;
 	float: left;
 }
 
 
-.icon{
-	height: 32px !important;
+.barButton{
+	position: relative;
+	height: 39px;
+	width: 99%;
+	background-color: blue;
+	opacity: 0.4;
+	z-index: 600;
 }
 
-.windowTitleIcons{
-	margin-left: 80%;
-	height: 100%;
-}
-
-.border{
-	background-color: #5CADFF;
-	float: left;
-}
-
-.topLeftBorder{
-	cursor: nw-resize;
-}
-
-.topRightBorder{
-	cursor: ne-resize;
-}
-
-.bottomLeftBorder{
-	cursor: sw-resize;
-}
-
-.bottomRightBorder{
-	cursor: nw-resize;
-}
-
-.leftRightSideBorder{
-	cursor: e-resize;
-}
-
-.bottomTopSideBorder{
-	cursor: s-resize;
-}
-
-.clearFix{
+.clear{
 	clear: both;
 	width: 100%;
 }
 
-.windowBody{
-	background-color: #CC0000;
-}
 
-.buttonBar{
-	position: relative;
-	height: 40px;
-	width: 100%;
-	background-color: #0047B2;
-	opacity: 0.3;
-	z-index: 500;
-}
-
-.buttonBar:hover{
-	opacity: 1;
-}
-
-.newWindow{
-	height: 40px;
-	width: 40px;
-	opacity: 1;
+.titleOfWindow{
+	background-color: yellow;
+	height: 39px;
 	float: left;
 }
 
-.windowInButtonBar{
-	height: 40px;
-	background-color: #33ADAD;
-	margin-right: 3px;
-	float: left;
+.windowTitleIkons{
+	margin-left: 80%;
+	height: 99%;
 }
 
-.windowInButtonBar:hover{
-	background-color: #99EBFF;
+
+.barButton:hover{
+	opacity: 0.9;
+}
+
+
+.buttonBarWindow:hover{
+	background-color: white;
+}
+
+.buttonBarWindow{
+	height: 39px;
+	background-color: black;
+	margin-right: 10px;
+	float: right;
+}
+
+.bodyWindow{
+	background-color: white;
+}
+
+
+
+.desktop{
+	width: 1280px;
+	background-color: cyan;
+	height: 700px;
 }

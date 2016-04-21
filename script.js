@@ -1,514 +1,845 @@
-var globalLastMouseX = 0;
-var globalLastMouseY = 0;
-var shiftX = 0;
-var shiftY = 0;
-var elem;
-var desktop;
-var desktopMinLeft;
-var desktopMaxLeft;
-var desktopMinTop;
-var desktopMaxTop;
-var minWindowSize = 200;
-var borderSize = 10;
-var lastWidth;
-var lastLeft;
-var windowsInButtonBar;
-var maximizedWindows;
+//autor:Martin Maga
+//xmagam00
+function inicializacia(){
+var state = 'complete';
+var documentState = document.readyState;
+if (state===documentState){
+oknaVBare=[];
+maximalizovaneOkna=[];
+var desktopClass='desktop';
+var desktops=document.getElementsByClassName(desktopClass);
+var pocetOkien=desktops.length;
+for (j=0;j<pocetOkien;j++){
+	var divElement = 'div';
+	var classAtribut = 'class';
+	var barButt = 'barButton';
+	var width = 43;
+	var pixels = 'px';
+	var image = 'img';
+	var imageSource = 'image/window_new.png';
+	var newWindow = 'windowNew';
+	var click = 'click';
+	var useCapture = false;
+	var imageElement = 'img';
+	var bar = document.createElement(divElement);
+		bar.style.top = ((desktops[j].offsetHeight-width)+pixels);
+	bar.setAttribute(classAtribut,barButt);
+	desktops[j].appendChild(bar);
 
-document.onreadystatechange=initialize;
-function initialize(){
-   if (document.readyState=='complete'){
-   	  windowsInButtonBar = new Array();
-   	  maximizedWindows = new Array();
-   	  var windows = document.getElementsByClassName('desktop');
-      for (i = 0; i < windows.length; ++i){
-      	addButtonBar(windows[i]);
+	var newWindowImg=document.createElement(imageElement);
+	newWindowImg.src=imageSource;
+	newWindowImg.setAttribute(classAtribut, newWindow);
+	newWindowImg.addEventListener(click, windowNew, useCapture);
+	bar.appendChild(newWindowImg);
+}
+var windowClass='window';
+var okna=document.getElementsByClassName(windowClass);
+var pocetOkien=okna.length;
+for(j=0;j<pocetOkien;j=j+1){
+pridatHraniceKOKnu(okna[j]);
+}
+ var titleWindow = 'titleOfWindow';
+	 var pravaHranica = 'pravaHranica';
+	 var lavaHranica = 'lavaHranica';
+	 var doleHranica = 'doleHranica';
+	 var horeHranica = 'horeHranica';
+	 var doleVpravoHranica = 'doleVpravoHranica';
+	 var doleVlavoHranica = 'doleVlavoHranica';
+	 var horeVlavoHranica = 'horeVlavoHranica';
+	 var horeVpravoHranica = 'horeVpravoHranica';
+	 var mousedownEvent = 'mousedown';
+	 var useCapture = false;
+
+	  temp = document.getElementsByClassName(titleWindow);
+	  dlzka = temp.length;
+      for(j=0;j<dlzka;j=j+1)
+      {
+      	temp[i].addEventListener(mousedownEvent,mysDoleCall,useCapture);
       }
-      var windows = document.getElementsByClassName('window');
-      for (i = 0; i < windows.length; ++i){
-      	addBordersToWindow(windows[i]);
+      temp = document.getElementsByClassName(pravaHranica);
+       dlzka = temp.length;
+      for(j=0;j<dlzka;j=j+1)
+      {
+      	temp[i].addEventListener(mousedownEvent,pravaHranicaZvec,useCapture);
       }
-      addListeners();
-   }
+      temp = document.getElementsByClassName(lavaHranica);
+       dlzka = temp.length;
+      for(j=0;j<dlzka;j=j+1)
+      {
+      	temp[j].addEventListener(mousedownEvent,lavahranicaZvec,useCapture);
+      }
+      temp = document.getElementsByClassName(doleHranica);
+       dlzka = temp.length;
+      for(j=0;j<dlzka;j=j+1){
+      	temp[i].addEventListener(mousedownEvent,doleHranicaZvec,useCapture);
+      }
+      temp = document.getElementsByClassName(horeHranica);
+       dlzka = temp.length;
+      for(j=0;j<dlzka;j=j+1)
+      {
+      	temp[i].addEventListener(mousedownEvent,horeHranicaZvec,useCapture);
+      }
+      temp = document.getElementsByClassName(doleVpravoHranica);
+dlzka = temp.length;
+for(j=0;j<dlzka;j=j+1){
+temp[i].addEventListener(mousedownEvent,doleHranicaZvec,useCapture);
+temp[i].addEventListener(mousedownEvent,pravaHranicaZvec,useCapture);
+}
+temp = document.getElementsByClassName(doleVlavoHranica);
+dlzka = temp.length;
+for(j=0;j<dlzka;j=j+1){
+temp[i].addEventListener(mousedownEvent,doleHranicaZvec,useCapture);
+temp[i].addEventListener(mousedownEvent,lavahranicaZvec,useCapture);
+}
+temp = document.getElementsByClassName(horeVlavoHranica);
+dlzka = temp.length;
+for(j=0;j<dlzka;j=j+1){
+temp[i].addEventListener(mousedownEvent,horeHranicaZvec,useCapture);
+temp[i].addEventListener(mousedownEvent,lavahranicaZvec,useCapture);
+}
+temp = document.getElementsByClassName(horeVpravoHranica);
+dlzka = temp.length;
+ for(j=0;j<dlzka;j=j+1)
+{
+temp[j].addEventListener(mousedownEvent,horeHranicaZvec,useCapture);
+temp[j].addEventListener(mousedownEvent,pravaHranicaZvec,useCapture);
+}
+}
 }
 
-function addListeners() {
-	  windows = document.getElementsByClassName('windowTitle');
-      for (i = 0; i < windows.length; ++i){
-      	windows[i].addEventListener('mousedown', mouseDownCallback, false);
+
+var windowNew=function(event)
+{
+	event.stopPropagation();
+	event.stopPropagation();
+	plochas = event.target.parentNode.parentNode; 
+	var divElement = 'div';
+	newWindowDiv = document.createElement(divElement);
+	var classAtribut = 'class';
+	var windowse = 'window';
+	var pixels = 'px';
+	var zindex = 10;
+	newWindowDiv.setAttribute(classAtribut, windowse);
+	newWindowDiv.style.left=(plochaLeftMinimum+pixels);
+	newWindowDiv.style.top=(plochaHoreMinimum+pixels);
+	newWindowDiv.style.zIndex=(zindex);
+	plochas.appendChild(newWindowDiv);
+	pridatHraniceKOKnu(newWindowDiv);
+	 var titleWindow = 'titleOfWindow';
+	 var pravaHranica = 'pravaHranica';
+	 var lavaHranica = 'lavaHranica';
+	 var doleHranica = 'doleHranica';
+	 var horeHranica = 'horeHranica';
+	 var doleVpravoHranica = 'doleVpravoHranica';
+	 var doleVlavoHranica = 'doleVlavoHranica';
+	 var horeVlavoHranica = 'horeVlavoHranica';
+	 var horeVpravoHranica = 'horeVpravoHranica';
+	 var mousedownEvent = 'mousedown';
+	 var useCapture = false;
+
+	  temp = document.getElementsByClassName(titleWindow);
+	  dlzka = temp.length;
+      for(j=0;j<dlzka;j=j+1)
+      {
+      	temp[j].addEventListener(mousedownEvent,mysDoleCall,useCapture);
       }
-      windows = document.getElementsByClassName('rightBorder');
-      for (i = 0; i < windows.length; ++i){
-      	windows[i].addEventListener('mousedown', rightBorderResize, false);
+      temp = document.getElementsByClassName(pravaHranica);
+       dlzka = temp.length;
+      for(j=0;j<dlzka;j=j+1)
+      {
+      	temp[i].addEventListener(mousedownEvent,pravaHranicaZvec,useCapture);
       }
-      windows = document.getElementsByClassName('leftBorder');
-      for (i = 0; i < windows.length; ++i){
-      	windows[i].addEventListener('mousedown', leftBorderResize, false);
+      temp = document.getElementsByClassName(lavaHranica);
+       dlzka = temp.length;
+      for(j=0;j<dlzka;j=j+1)
+      {
+      	temp[j].addEventListener(mousedownEvent,lavahranicaZvec,useCapture);
       }
-      windows = document.getElementsByClassName('bottomBorder');
-      for (i = 0; i < windows.length; ++i){
-      	windows[i].addEventListener('mousedown', bottomBorderResize, false);
+      temp = document.getElementsByClassName(doleHranica);
+       dlzka = temp.length;
+      for(j=0;j<dlzka;j=j+1){
+      	temp[j].addEventListener(mousedownEvent,doleHranicaZvec,useCapture);
       }
-      windows = document.getElementsByClassName('topBorder');
-      for (i = 0; i < windows.length; ++i){
-      	windows[i].addEventListener('mousedown', topBorderResize, false);
+      temp = document.getElementsByClassName(horeHranica);
+       dlzka = temp.length;
+      for(j=0;j<dlzka;j=j+1)
+      {
+      	temp[j].addEventListener(mousedownEvent,horeHranicaZvec,useCapture);
       }
-      windows = document.getElementsByClassName('bottomRightBorder');
-      for (i = 0; i < windows.length; ++i){
-      	windows[i].addEventListener('mousedown', bottomBorderResize, false);
-      	windows[i].addEventListener('mousedown', rightBorderResize, false);
-      }
-      windows = document.getElementsByClassName('bottomLeftBorder');
-      for (i = 0; i < windows.length; ++i){
-      	windows[i].addEventListener('mousedown', bottomBorderResize, false);
-      	windows[i].addEventListener('mousedown', leftBorderResize, false);
-      }
-      windows = document.getElementsByClassName('topLeftBorder');
-      for (i = 0; i < windows.length; ++i){
-      	windows[i].addEventListener('mousedown', topBorderResize, false);
-      	windows[i].addEventListener('mousedown', leftBorderResize, false);
-      }
-      windows = document.getElementsByClassName('topRightBorder');
-      for (i = 0; i < windows.length; ++i){
-      	windows[i].addEventListener('mousedown', topBorderResize, false);
-      	windows[i].addEventListener('mousedown', rightBorderResize, false);
-      }
+      temp = document.getElementsByClassName(doleVpravoHranica);
+dlzka = temp.length;
+for(j=0;j<dlzka;j=j+1){
+temp[j].addEventListener(mousedownEvent,doleHranicaZvec,useCapture);
+temp[j].addEventListener(mousedownEvent,pravaHranicaZvec,useCapture);
+}
+temp = document.getElementsByClassName(doleVlavoHranica);
+dlzka = temp.length;
+for(j=0;j<dlzka;j=j+1){
+temp[j].addEventListener(mousedownEvent,doleHranicaZvec,useCapture);
+temp[j].addEventListener(mousedownEvent,lavahranicaZvec,useCapture);
+}
+temp = document.getElementsByClassName(horeVlavoHranica);
+dlzka = temp.length;
+for(j=0;j<dlzka;j=j+1){
+temp[j].addEventListener(mousedownEvent,horeHranicaZvec,useCapture);
+temp[j].addEventListener(mousedownEvent,lavahranicaZvec,useCapture);
+}
+temp = document.getElementsByClassName(horeVpravoHranica);
+dlzka = temp.length;
+ for(j=0;j<dlzka;j=j+1)
+{
+temp[j].addEventListener(mousedownEvent,horeHranicaZvec,useCapture);
+temp[j].addEventListener(mousedownEvent,pravaHranicaZvec,useCapture);
+}
 }
 
-function addButtonBar(elem) {
-	var buttonBar = document.createElement('div');
-	buttonBar.setAttribute('class', 'buttonBar');
-	buttonBar.style.top = (elem.offsetHeight - 40) + 'px';
-	elem.appendChild(buttonBar);
-
-	var newWindowImg = document.createElement('img');
-	newWindowImg.src = 'img/new_window.png';
-	newWindowImg.setAttribute('class', 'newWindow');
-	newWindowImg.addEventListener('click', newWindow, false);
-	buttonBar.appendChild(newWindowImg);
+//funkcia na pridanie clearu
+function pridanieClearu(elementos)
+{
+	var elementDiv = 'div';
+	var classElement = 'class';
+	var clearElement = 'clear';
+	var clearik=document.createElement(elementDiv);
+	clearik.setAttribute(classElement,clearElement);
+	elementos.appendChild(clearik);
 }
 
-var newWindow = function(event) {
-	event.preventDefault();
-	desktop = event.target.parentNode.parentNode; // najprv je buttonBar a potom je desktop
-	newWindowDiv = document.createElement('div');
-	newWindowDiv.setAttribute('class', 'window');
-	newWindowDiv.style.left = desktopMinLeft + 'px';
-	newWindowDiv.style.top = desktopMinTop + 'px';
-	newWindowDiv.style.zIndex = 10;
-	desktop.appendChild(newWindowDiv);
-	addBordersToWindow(newWindowDiv);
-	addListeners();
+
+
+var zavrietWindow = function(event)
+{
+event.preventDefault();
+event.stopPropagation();
+event.target.parentNode.parentNode.parentNode.removeChild(event.target.parentNode.parentNode);
 }
 
-function addBordersToWindow(elem) {
-	// topLeftBorder
-	var topLeftBorder = document.createElement('div');
-	topLeftBorder.setAttribute('class', 'border cornerBorder topLeftBorder');
-	topLeftBorder.style.width = borderSize + 'px';
-	topLeftBorder.style.height = borderSize + 'px';
-	elem.appendChild(topLeftBorder);
-	//topBorder
-	var topBorder = document.createElement('div');
-	topBorder.setAttribute('class', 'border bottomTopSideBorder topBorder');
-	topBorder.style.width = (elem.offsetWidth - borderSize * 2) + 'px';
-	topBorder.style.height = borderSize + 'px';
-	elem.appendChild(topBorder);
-	// topRight
-	var topRightBorder = document.createElement('div');
-	topRightBorder.setAttribute('class', 'border cornerBorder topRightBorder');
-	topRightBorder.style.width = borderSize + 'px';
-	topRightBorder.style.height = borderSize + 'px';
-	elem.appendChild(topRightBorder);
-	// clearFix
-	addClearFix(elem);
-	// leftBorder
-	var leftBorder = document.createElement('div');
-	leftBorder.setAttribute('class', 'border leftRightSideBorder leftBorder');
-	leftBorder.style.width = borderSize + 'px';
-	leftBorder.style.height = (elem.offsetHeight - borderSize * 2) + 'px';
-	elem.appendChild(leftBorder);
-	// title
-	addTitleToWindow(elem);
-	// rightBorder
-	var rightBorder = document.createElement('div');
-	rightBorder.setAttribute('class', 'border leftRightSideBorder rightBorder');
-	rightBorder.style.width = borderSize + 'px';
-	rightBorder.style.height = (elem.offsetHeight - borderSize * 2) + 'px';
-	elem.appendChild(rightBorder);
-	// clearFix
-	addClearFix(elem);
-	// bottomLeftBorder
-	var bottomLeftBorder = document.createElement('div');
-	bottomLeftBorder.setAttribute('class', 'border cornerBorder bottomLeftBorder');
-	bottomLeftBorder.style.width = borderSize + 'px';
-	bottomLeftBorder.style.height = borderSize + 'px';
-	elem.appendChild(bottomLeftBorder);
-	// bottomBorder
-	var bottomBorder = document.createElement('div');
-	bottomBorder.setAttribute('class', 'border bottomTopSideBorder bottomBorder');
-	bottomBorder.style.width = (elem.offsetWidth - borderSize * 2) + 'px';
-	bottomBorder.style.height = borderSize + 'px';
-	elem.appendChild(bottomBorder);
-	// bottomRightBorder
-	var bottomRightBorder = document.createElement('div');
-	bottomRightBorder.setAttribute('class', 'border cornerBorder bottomRightBorder');
-	bottomRightBorder.style.width = borderSize + 'px';
-	bottomRightBorder.style.height = borderSize + 'px';
-	elem.appendChild(bottomRightBorder);
-}
+var minimalizovatOkno = function(event)
+{
+event.preventDefault();
+	event.stopPropagation();
+	var prvy = 0;
+	elemen = event.target.parentNode.parentNode;
+	var barButtonClass = 'barButton';
+	var idcko = 'id';
+	var divElement = 'div';
+	var classAttr= 'class';
 
-function addClearFix(elem){
-	var clearFix = document.createElement('div');
-	clearFix.setAttribute('class', 'clearFix');
-	elem.appendChild(clearFix);
-}
-
-function addTitleToWindow(elem) {
-	var title = document.createElement('div');
-	title.setAttribute('class','windowTitle');
-	title.style.width = (elem.offsetWidth - borderSize*2) + 'px';
-	elem.appendChild(title);
-
-	var minimizeImg = document.createElement('img');
-	minimizeImg.src = 'img/minimize.png';
-	minimizeImg.setAttribute('class', 'icon minimizeButton');
-	minimizeImg.addEventListener('click', minimizeWindow, false);
-	title.appendChild(minimizeImg);
-
-	var maximizeImg = document.createElement('img');
-	maximizeImg.src = 'img/maximize.png';
-	maximizeImg.setAttribute('class', 'icon maximizeButton');
-	maximizeImg.addEventListener('click', maximizeWindow, false);
-	title.appendChild(maximizeImg);
-
-	var closeImg = document.createElement('img');
-	closeImg.src = 'img/close.png';
-	closeImg.setAttribute('class', 'icon closeButton');
-	closeImg.addEventListener('click', closeWindow, false);
-	title.appendChild(closeImg);
-
-	elemWidth = elem.offsetWidth;
-	minimizeImg.style.marginLeft = (elemWidth - 40*3) + 'px';
-}
-
-var closeWindow = function(event) {
-	event.preventDefault();
-	var thisElem = event.target.parentNode.parentNode;
-	thisElem.parentNode.removeChild(thisElem);
-}
-
-var minimizeWindow = function(event) {
-	event.preventDefault();
-	elem = event.target.parentNode.parentNode;
-	desktop = elem.parentNode;
-	var buttonBar = desktop.getElementsByClassName('buttonBar')[0];
-	windowsInButtonBar[windowsInButtonBar.length] = {elemLeft: elem.style.left, elemTop: elem.style.top, elemWidth: elem.offsetWidth, elemHeight: elem.offsetHeight};
-	windowIBB = document.createElement('div');
-	windowIBB.setAttribute('class', 'windowInButtonBar');
-	windowIBB.setAttribute('id', windowsInButtonBar.length - 1);
-	windowIBB.addEventListener('click', restoreFromBar, false);
-	if (windowsInButtonBar.length - 1 == 0){
-		windowIBB.innerHTML = 'window';
+	plocha = elemen.parentNode;
+	var barButton = plocha.getElementsByClassName(barButtonClass)[prvy];
+	oknaVBare[oknaVBare.length] = {elemLeft: elemen.style.left, elemTop: elemen.style.top, elemWidth: elemen.offsetWidth, elemHeight: elemen.offsetHeight};
+	oknoMin = document.createElement(divElement);
+	oknoMin.setAttribute(classAttr, 'buttonBarWindow');
+	oknoMin.setAttribute(idcko, oknaVBare.length - 1);
+	oknoMin.addEventListener(click, obnovenieOkna, false);
+	if (oknaVBare.length - 1 == 0){
+		oknoMin.innerHTML = windowAttr;
 	} else{
-		windowIBB.innerHTML = 'window' + (windowsInButtonBar.length - 1);
+		oknoMin.innerHTML = windowAttr + (oknaVBare.length - 1);
 	}
-	buttonBar.appendChild(windowIBB);
-	windows = buttonBar.getElementsByClassName('windowInButtonBar');
+	barButton.appendChild(oknoMin);
+	windows = barButton.getElementsByClassName('buttonBarWindow');
       for (i = 0; i < windows.length; ++i){
       	if (windows.length < 7){
-      		windows[i].style.width = ((desktop.offsetWidth / 7) - 3 - 40) + 'px';
+      		windows[i].style.width = ((plocha.offsetWidth / 7) - 3 - 43) + pixels;
       	} else {
-      		windows[i].style.width = ((desktop.offsetWidth / windows.length) - 3 - 40) + 'px';
+      		windows[i].style.width = ((plocha.offsetWidth / windows.length) - 3 - 43) + pixels;
       	}
     }
-    desktop.removeChild(elem);
+    plocha.removeChild(elemen);
 }
 
-var restoreFromBar = function(event){
-	event.preventDefault();
-	thisElem = event.target;
-	desktop = thisElem.parentNode.parentNode;
-	var buttonBar = thisElem.parentNode;
-	var thisElemId = thisElem.getAttribute('id');
-	var obj = windowsInButtonBar[thisElemId];
-	
-	newWindowDiv = document.createElement('div');
-	newWindowDiv.setAttribute('class', 'window');
-	newWindowDiv.style.left = obj.elemLeft;
-	newWindowDiv.style.top = obj.elemTop;
-	newWindowDiv.style.width = obj.elemWidth + 'px';
-	newWindowDiv.style.height = obj.elemHeight + 'px';
-	desktop.appendChild(newWindowDiv);
-	addBordersToWindow(newWindowDiv);
-	addListeners();
-	buttonBar.removeChild(thisElem);
-
-	windows = buttonBar.getElementsByClassName('windowInButtonBar');
-      for (i = 0; i < windows.length; ++i){
-      	if (windows.length < 7){
-      		windows[i].style.width = ((desktop.offsetWidth / 7) - 3 - 40) + 'px';
-      	} else {
-      		windows[i].style.width = ((desktop.offsetWidth / windows.length) - 3 - 40) + 'px';
-      	}
-    }
-}
-
-var maximizeWindow = function(event) {
-	elem = event.target.parentNode.parentNode;
-	elem.setAttribute('id', maximizedWindows.length)
-	maximizedWindows[maximizedWindows.length] = {elemLeft: elem.style.left, elemTop: elem.style.top, elemWidth: elem.offsetWidth, elemHeight: elem.offsetHeight};
-	elem.getElementsByClassName('maximizeButton')[0].removeEventListener('click', maximizeWindow);
-	elem.getElementsByClassName('maximizeButton')[0].addEventListener('click', restoreWindow, false);
-	elem.style.left = desktopMinLeft + 'px';
-	elem.style.top = desktopMinTop + 'px';
-	var newWidth = elem.parentNode.offsetWidth;
-	var newHeight = elem.parentNode.offsetHeight-40;
-	elem.style.width = newWidth + 'px';
-	elem.style.height = newHeight + 'px';
-	windows = elem.getElementsByClassName('bottomTopSideBorder');
-	for (i = 0; i < windows.length; ++i){
-		windows[i].style.width = (newWidth - borderSize * 2) + 'px';
-	}
-	windows = elem.getElementsByClassName('leftRightSideBorder');
-		for (i = 0; i < windows.length; ++i){
-			windows[i].style.height = (newHeight - borderSize * 2) + 'px';
-	}
-	title = elem.getElementsByClassName('windowTitle');
-	title[0].style.width = (newWidth - borderSize * 2) + 'px';
-	minimize = elem.getElementsByClassName('minimizeButton');
-	minimize[0].style.marginLeft = (newWidth - 40*3) + 'px';
-}
-
-var restoreWindow = function(event) {
-	elem = event.target.parentNode.parentNode;
-	elemId = elem.getAttribute('id');
-	obj = maximizedWindows[elemId];
-	elem.style.left = obj.elemLeft;
-	elem.style.top = obj.elemTop;
-	var newWidth = obj.elemWidth;
-	var newHeight = obj.elemHeight;
-	elem.style.width = newWidth + 'px';
-	elem.style.height = newHeight + 'px';
-	windows = elem.getElementsByClassName('bottomTopSideBorder');
-	for (i = 0; i < windows.length; ++i){
-		windows[i].style.width = (newWidth - borderSize * 2) + 'px';
-	}
-	windows = elem.getElementsByClassName('leftRightSideBorder');
-		for (i = 0; i < windows.length; ++i){
-			windows[i].style.height = (newHeight - borderSize * 2) + 'px';
-	}
-	title = elem.getElementsByClassName('windowTitle');
-	title[0].style.width = (newWidth - borderSize * 2) + 'px';
-	minimize = elem.getElementsByClassName('minimizeButton');
-	minimize[0].style.marginLeft = (newWidth - 40*3) + 'px';
-	elem.getElementsByClassName('maximizeButton')[0].removeEventListener('click', restoreWindow);
-	elem.getElementsByClassName('maximizeButton')[0].addEventListener('click', maximizeWindow, false);
-}
-
-function GetScreenCoordinates(obj) {
-    var p = {};
-    p.x = obj.offsetLeft;
-    p.y = obj.offsetTop;
-    while (obj.offsetParent) {
-        p.x = p.x + obj.offsetParent.offsetLeft;
-        p.y = p.y + obj.offsetParent.offsetTop;
-       if (obj == document.getElementsByTagName('body')[0]) {
-            break;
-        }
-        else {
-           obj = obj.offsetParent;
-        }
-    }
-    return p;
-}
-
-
-function initClick(thisElem){
-  elem = thisElem.parentNode;
-  var thisLeft;
-  var thisTop;
-  if (elem.style.left === '' || elem.style.top === ''){
-    var thisCoors = GetScreenCoordinates(elem);
-    thisLeft = thisCoors.x;
-    thisTop = thisCoors.y;
-  }else{
-    thisLeft = parseFloat(elem.style.left);
-    thisTop = parseFloat(elem.style.top);
-  }
-  elem.style.zIndex = 100;
-  elem.style.left = thisLeft + 'px';
-  elem.style.top = thisTop + 'px';
-  shiftX = globalLastMouseX - thisLeft;
-  shiftY = globalLastMouseY - thisTop;
-  desktop = elem.parentNode;
-  desktopMinLeft = desktop.offsetLeft;
-  desktopMinTop = desktop.offsetTop;
-  desktopMaxLeft = desktop.offsetWidth - elem.offsetWidth + desktop.offsetLeft;
-  desktopMaxTop = desktop.offsetHeight - elem.offsetHeight + desktop.offsetTop;
-}
-
-var mouseDownCallback = function(event){
-  event.preventDefault();
-  globalLastMouseX = event.clientX;
-  globalLastMouseY = event.clientY;
-  initClick(this);
-  window.addEventListener('mousemove', mouseMoveCallback, false);
-  window.addEventListener('mouseup', mouseUpCallback, false);
-}
-
-var mouseMoveCallback = function(event)
+var obnovenieOkna = function(event)
 {
 	event.preventDefault();
-	var newLeft = event.clientX - shiftX;
-	var newTop = event.clientY - shiftY;
-	if (newLeft <= desktopMinLeft){
-		newLeft = desktopMinLeft;
-	}
-	if (newTop <= desktopMinTop){
-		newTop = desktopMinTop;
-	}
-	if (newLeft >= desktopMaxLeft){
-		newLeft = desktopMaxLeft;
-	}
-	if (newTop >= desktopMaxTop){
-		newTop = desktopMaxTop;
-	}
-	elem.style.left = newLeft + 'px';
-	elem.style.top = newTop + 'px'; 
-}
+	event.stopPropagation();
+	thisElem = event.target;
+	var idcko = 'id';
+	plocha = thisElem.parentNode.parentNode;
+	var barButton = thisElem.parentNode;
+	var thisElemId = thisElem.getAttribute('id');
+	var objektik = oknaVBare[thisElemId];
+	var divElement = 'div';
 
-var mouseUpCallback = function(event) {
-	event.preventDefault();
-	window.removeEventListener('mousemove', mouseMoveCallback);
-	window.removeEventListener('mousemove', rightBorderResizeMove);
-	window.removeEventListener('mousemove', leftBorderResizeMove);
-	window.removeEventListener('mousemove', bottomBorderResizeMove);
-	window.removeEventListener('mousemove', topBorderResizeMove);
-	window.removeEventListener('mouseup', mouseUpCallback);
-	setOtherWindowsBack();
-}
+	newWindowDiv = document.createElement(divElement);
+	newWindowDiv.setAttribute(classAttr, windowAttr);
+	newWindowDiv.style.left = objektik.elemLeft;
+	newWindowDiv.style.top = objektik.elemTop;
+	newWindowDiv.style.height = objektik.elemHeight + pixels;
+		newWindowDiv.style.width = objektik	.elemWidth + pixels;
+	plocha.appendChild(newWindowDiv);
+	pridatHraniceKOKnu(newWindowDiv);
+	 var titleWindow = 'titleOfWindow';
+	 var pravaHranica = 'pravaHranica';
+	 var lavaHranica = 'lavaHranica';
+	 var doleHranica = 'doleHranica';
+	 var horeHranica = 'horeHranica';
+	 var doleVpravoHranica = 'doleVpravoHranica';
+	 var doleVlavoHranica = 'doleVlavoHranica';
+	 var horeVlavoHranica = 'horeVlavoHranica';
+	 var horeVpravoHranica = 'horeVpravoHranica';
+	 var mousedownEvent = 'mousedown';
+	 var useCapture = false;
 
-function setOtherWindowsBack() {
-	var windows = desktop.getElementsByClassName('window');
-      for (i = 0; i < windows.length; ++i){
-      	windows[i].style.zIndex = 0;
+	  temp = document.getElementsByClassName(titleWindow);
+	  dlzka = temp.length;
+      for(j=0;j<dlzka;j=j+1)
+      {
+      	temp[j].addEventListener(mousedownEvent,mysDoleCall,useCapture);
+      }
+      temp = document.getElementsByClassName(pravaHranica);
+       dlzka = temp.length;
+      for(j=0;j<dlzka;j=j+1)
+      {
+      	temp[j].addEventListener(mousedownEvent,pravaHranicaZvec,useCapture);
+      }
+      temp = document.getElementsByClassName(lavaHranica);
+       dlzka = temp.length;
+      for(j=0;j<dlzka;j=j+1)
+      {
+      	temp[j].addEventListener(mousedownEvent,lavahranicaZvec,useCapture);
+      }
+      temp = document.getElementsByClassName(doleHranica);
+       dlzka = temp.length;
+      for(j=0;j<dlzka;j=j+1){
+      	temp[j].addEventListener(mousedownEvent,doleHranicaZvec,useCapture);
+      }
+      temp = document.getElementsByClassName(horeHranica);
+       dlzka = temp.length;
+      for(j=0;j<dlzka;j=j+1)
+      {
+      	temp[j].addEventListener(mousedownEvent,horeHranicaZvec,useCapture);
+      }
+      temp = document.getElementsByClassName(doleVpravoHranica);
+dlzka = temp.length;
+for(j=0;j<dlzka;j=j+1){
+temp[j].addEventListener(mousedownEvent,doleHranicaZvec,useCapture);
+temp[j].addEventListener(mousedownEvent,pravaHranicaZvec,useCapture);
+}
+temp = document.getElementsByClassName(doleVlavoHranica);
+dlzka = temp.length;
+for(j=0;j<dlzka;j=j+1){
+temp[j].addEventListener(mousedownEvent,doleHranicaZvec,useCapture);
+temp[j].addEventListener(mousedownEvent,lavahranicaZvec,useCapture);
+}
+temp = document.getElementsByClassName(horeVlavoHranica);
+dlzka = temp.length;
+for(j=0;j<dlzka;j=j+1){
+temp[j].addEventListener(mousedownEvent,horeHranicaZvec,useCapture);
+temp[j].addEventListener(mousedownEvent,lavahranicaZvec,useCapture);
+}
+temp = document.getElementsByClassName(horeVpravoHranica);
+dlzka = temp.length;
+ for(j=0;j<dlzka;j=j+1)
+{
+temp[j].addEventListener(mousedownEvent,horeHranicaZvec,useCapture);
+temp[j].addEventListener(mousedownEvent,pravaHranicaZvec,useCapture);
+}
+	barButton.removeChild(thisElem);
+
+	okna = barButton.getElementsByClassName('buttonBarWindow');
+	var dlzka = okna.length;
+      for (j=0;j<dlzka;j=j+1){
+      	if (okna.length < 7){
+      		okna[j].style.width = ((plocha.offsetWidth/7)-3-43)+pixels;
+      	} else {
+      		okna[i].style.width = ((plocha.offsetWidth/okna.length)-3-43)+pixels;
+      	}
     }
-    elem.style.zIndex = 1;
 }
 
-var rightBorderResize = function(event) {
-	event.preventDefault();
-	globalLastMouseX = event.clientX;
-  	globalLastMouseY = event.clientY;
-	initClick(this);
-	window.addEventListener('mousemove', rightBorderResizeMove, false);
-	window.addEventListener('mouseup', mouseUpCallback, false);
+var maxilazaciaOkna=function(event) {
+elemen = event.target.parentNode.parentNode;
+elemen.setAttribute('id', maximalizovaneOkna.length);
+var prvy = 0;
+var useCapture = false;
+maximalizovaneOkna[maximalizovaneOkna.length] = {elemLeft: elemen.style.left, elemTop: elemen.style.top, elemWidth: elemen.offsetWidth, elemHeight: elemen.offsetHeight};
+elemen.getElementsByClassName('maximalTlacidlo')[prvy].removeEventListener(click, maxilazaciaOkna);
+elemen.getElementsByClassName('maximalTlacidlo')[prvy].addEventListener(click, obnovOkno, useCapture);
+elemen.style.left = plochaLeftMinimum + 'px';
+elemen.style.top = plochaHoreMinimum + 'px';
+var novaSirka = elemen.parentNode.offsetWidth;
+var novaVyska = elemen.parentNode.offsetHeight-40;
+elemen.style.width = novaSirka + 'px';
+elemen.style.height = novaVyska + 'px';
+windows = elemen.getElementsByClassName('doleHoreStranaHranica');
+for (i = 0; i < windows.length; ++i){
+	windows[i].style.width = (novaSirka - velkostHranice * 2) + pixels;
 }
-
-var rightBorderResizeMove = function(event) {
-	event.preventDefault();
-	var newWidth = elem.offsetWidth + event.clientX - globalLastMouseX;
-	globalLastMouseX = event.clientX;
-	if (newWidth <= minWindowSize){
-		newWidth = minWindowSize;
-	}
-	if (newWidth + elem.offsetLeft >= desktop.offsetWidth + desktop.offsetLeft){
-		newWidth = desktop.offsetWidth - elem.offsetLeft + desktop.offsetLeft;
-	}
-	elem.style.width = newWidth + 'px';
-	windows = elem.getElementsByClassName('bottomTopSideBorder');
+windows = elemen.getElementsByClassName('lavaPravaStranaHranica');
 	for (i = 0; i < windows.length; ++i){
-		windows[i].style.width = (newWidth - borderSize * 2) + 'px';
-    }
-    title = elem.getElementsByClassName('windowTitle');
-    title[0].style.width = (newWidth - borderSize * 2) + 'px';
-    minimize = elem.getElementsByClassName('minimizeButton');
-    minimize[0].style.marginLeft = (newWidth - 40*3) + 'px';
+		windows[i].style.height = (novaVyska - velkostHranice * 2) + pixels;
+}
+title = elemen.getElementsByClassName('titleOfWindow');
+title[prvy].style.width = (novaSirka - velkostHranice * 2) + pixels;
+minimize = elemen.getElementsByClassName('minTlacidlo');
+minimize[prvy].style.marginLeft = (novaSirka - 43*3) + pixels;
 }
 
-var leftBorderResize = function(event) {
-	event.preventDefault();
-	globalLastMouseX = event.clientX;
-  	globalLastMouseY = event.clientY;
-	initClick(this);
-	window.addEventListener('mousemove', leftBorderResizeMove, false);
-	window.addEventListener('mouseup', mouseUpCallback, false);
+var obnovOkno = function(event)
+{
+elementik = event.target.parentNode.parentNode;
+var idcko = 'id';
+elemId = elementik.getAttribute(idcko);
+var prvy = 0;
+var useCapture = false;
+elementik.style.left = obj.elemLeft;
+elementik.style.top = obj.elemTop;
+obj = maximalizovaneOkna[elemId];
+var novaSirka = obj.elemWidth;
+var novaVyska = obj.elemHeight;
+elementik.style.width = novaSirka ;
+elementik.style.width = elementik.style.width+ pixels;
+elementik.style.height = novaVyska ;
+elementik.style.height = elementik.style.height+ pixels;
+okna = elementik.getElementsByClassName('doleHoreStranaHranica');
+var dlzka = okna.length;
+for (j=0;j<dlzka;j=j+1){
+	okna[j].style.width = (novaSirka - velkostHranice * 2) + pixels;
 }
-
-var leftBorderResizeMove = function(event) {
-	event.preventDefault();
-	var oldLeft = parseFloat(elem.style.left);
-	var newLeft = event.clientX;
-	if (newLeft < desktopMinLeft){
-		newLeft = desktopMinLeft;
+okna = elementik.getElementsByClassName('lavaPravaStranaHranica');
+dlzka = okna.length;
+	for (j=0;j<okna;j=j+1){
+			windows[j].style.height = (novaVyska - velkostHranice * 2) + pixels;
 	}
-	var newWidth = elem.offsetWidth + (oldLeft - newLeft);  
-	if (newWidth > minWindowSize) {
-		elem.style.left = newLeft + 'px';     
-		elem.style.width = newWidth + 'px';
-	    
-		windows = elem.getElementsByClassName('bottomTopSideBorder');
-		for (i = 0; i < windows.length; ++i){
-			windows[i].style.width = (newWidth - borderSize * 2) + 'px';
-		}
-		title = elem.getElementsByClassName('windowTitle');
-		title[0].style.width = (newWidth - borderSize * 2) + 'px';
-		minimize = elem.getElementsByClassName('minimizeButton');
-		minimize[0].style.marginLeft = (newWidth - 40*3) + 'px';
-	}                          
+	title = elementik.getElementsByClassName('titleOfWindow');
+	title[prvy].style.width = (novaSirka - velkostHranice * 2) + pixels;
+	minimize = elementik.getElementsByClassName('minTlacidlo');
+minimize[prvy].style.marginLeft = (novaSirka - 43*3);
+minimize[prvy].style.marginLeft = minimize[prvy].style.marginLeft  + pixels;
+elementik.getElementsByClassName('maximalTlacidlo')[prvy].removeEventListener(click, obnovOkno);
+elementik.getElementsByClassName('maximalTlacidlo')[prvy].addEventListener(click, maxilazaciaOkna, useCapture);
 }
 
-var bottomBorderResize = function(event) {
-	event.preventDefault();
-	globalLastMouseX = event.clientX;
-  	globalLastMouseY = event.clientY;
-	initClick(this);
-	window.addEventListener('mousemove', bottomBorderResizeMove, false);
-	window.addEventListener('mouseup', mouseUpCallback, false);
+function ziskajKoordinaty(objektik) {
+var body = {};
+var telo = 'body';
+var prvy = 0;
+   body.x = objektik.offsetLeft;
+   body.y = objektik.offsetTop;
+ while (objektik.offsetParent) {
+ body.x = body.x + objektik.offsetParent.offsetLeft;
+ body.y = body.y + objektik.offsetParent.offsetTop;
+ if (objektik != document.getElementsByTagName(telo)[prvy]) {
+ objektik = objektik.offsetParent;
+  }
+  else {
+    break;
+  }
+  }
+  return body;
 }
 
-var bottomBorderResizeMove = function(event) {
-	event.preventDefault();
-	var newHeight = elem.offsetHeight + event.clientY - globalLastMouseY;
-	globalLastMouseY = event.clientY;
-	if (newHeight <= minWindowSize){
-		newHeight = minWindowSize;
-	}
-	if (newHeight + elem.offsetTop >= desktop.offsetHeight + desktop.offsetTop){
-		newHeight = desktop.offsetHeight - elem.offsetTop + desktop.offsetTop;
-	}
-	elem.style.height = newHeight + 'px';
-	windows = elem.getElementsByClassName('leftRightSideBorder');
-	for (i = 0; i < windows.length; ++i){
-		windows[i].style.height = (newHeight - borderSize * 2) + 'px';
-    }
+
+function inizializaciaKliku(thisElem){
+  elemen = thisElem.parentNode;
+  var thisLeft= '';
+  var thisTop= '';
+  var emptyContent = '';
+  if (elemen.style.left === emptyContent){
+  	if (elemen.style.top === emptyContent){
+    var thisCoors = ziskajKoordinaty(elemen);
+    thisLeft = thisCoors.x;
+    thisTop = thisCoors.y;
+  }}else{
+    thisLeft = parseFloat(elemen.style.left);
+    thisTop = parseFloat(elemen.style.top);
+  }
+  var zIndexVal = 100;
+  elemen.style.zIndex = zIndexVal;
+  elemen.style.left = thisLeft + pixels;
+  elemen.style.top = thisTop + pixels;
+  xShift = lastMouseXCord ;
+  xShift = xShift- thisLeft;
+  yShift = lastMouseYCord ;
+  yShift = yShift- thisTop;
+  plocha = elemen.parentNode;
+  plochaLeftMinimum = plocha.offsetLeft;
+  plochaHoreMinimum = plocha.offsetTop;
+  plochaLeftMax = plocha.offsetWidth - elemen.offsetWidth + plocha.offsetLeft;
+  plochaHoreMaximum = plocha.offsetHeight - elemen.offsetHeight + plocha.offsetTop;
 }
 
-var topBorderResize = function(event) {
-	event.preventDefault();
-	globalLastMouseX = event.clientX;
-  	globalLastMouseY = event.clientY;
-	initClick(this);
-	window.addEventListener('mousemove', topBorderResizeMove, false);
-	window.addEventListener('mouseup', mouseUpCallback, false);
+var mysDoleCall=function(event)
+{
+  var useCapture = false;
+  event.preventDefault();
+event.stopPropagation();
+   lastMouseYCord = event.clientY;
+  lastMouseXCord = event.clientX;
+ 
+  inizializaciaKliku(this);
+  window.addEventListener(mousemoveEvent, mysPohybCall,useCapture);
+  window.addEventListener(mouseUpEvent,mysHoreCall,useCapture);
 }
 
-var topBorderResizeMove = function(event) {
-	event.preventDefault();
-	var oldTop = parseFloat(elem.style.top);
-	var newTop = event.clientY;
-	if (newTop < desktopMinTop){
-		newTop = desktopMinTop;
+var mysPohybCall =function(event)
+{
+event.preventDefault();
+	event.stopPropagation();
+	var newLeft = event.clientX - xShift;
+	var newTop = event.clientY - yShift;
+	if (newLeft <= plochaLeftMinimum){
+		newLeft = plochaLeftMinimum;
 	}
-	var newHeight = elem.offsetHeight + (oldTop - newTop);
-	console.log(newHeight);
-	if (newHeight > minWindowSize) {
-		elem.style.top = newTop + 'px';     
-		elem.style.height = newHeight + 'px';
-		windows = elem.getElementsByClassName('leftRightSideBorder');
-		for (i = 0; i < windows.length; ++i){
-			windows[i].style.height = (newHeight - borderSize * 2) + 'px';
-		}
+	if (newTop <= plochaHoreMinimum){
+		newTop = plochaHoreMinimum;
+	}
+	if (newLeft >= plochaLeftMax){
+		newLeft = plochaLeftMax;
+	}
+	if (newTop >= plochaHoreMaximum){
+		newTop = plochaHoreMaximum;
+	}
+	elemen.style.left = newLeft + pixels;
+	elemen.style.top = newTop + pixels;
+}
+
+var mysHoreCall=function(event)
+{
+event.preventDefault();
+event.stopPropagation();
+window.removeEventListener(mousemoveEvent, doleHranicaZvecPosun);
+window.removeEventListener(mouseUpEvent, mysHoreCall);
+window.removeEventListener(mousemoveEvent,mysPohybCall);
+window.removeEventListener(mousemoveEvent, lavaHranicaZvecPosun);
+window.removeEventListener(mousemoveEvent, pravaHranicaZvecPosun);
+window.removeEventListener(mousemoveEvent, horeHranicaZvecPosun);
+nastavOstatneOknaSpet();
+}
+
+function nastavOstatneOknaSpet()
+{
+var oknoClass = 'window';
+var zIndex = -1;
+var zindex1 = 1;
+var okna = plocha.getElementsByClassName(oknoClass);
+var dlzka = okna.length;
+for (j=0;j<dlzka;j=j+1){
+okna[j].style.zIndex = zIndex;
+}
+elemen.style.zIndex = zindex1;
+}
+
+var pravaHranicaZvec=function(event)
+{
+event.preventDefault();
+event.stopPropagation();
+lastMouseYCord = event.clientY;
+lastMouseXCord = event.clientX;
+
+inizializaciaKliku(this);
+var useCapture = false;
+window.addEventListener(mouseUpEvent,mysHoreCall,useCapture);
+window.addEventListener(mousemoveEvent,pravaHranicaZvecPosun,useCapture);
+}
+
+var pravaHranicaZvecPosun = function(event)
+{
+event.stopPropagation();
+event.preventDefault();
+var novaRiska=(elemen.offsetWidth)+(event.clientX);
+novaRiska = (novaRiska - lastMouseXCord);
+lastMouseXCord = event.clientX;
+var pom1 = novaRiska + elemen.offsetLeft;
+var pom2 = plocha.offsetWidth + plocha.offsetLeft;
+if (pom1 >= pom2){
+	novaRiska = plocha.offsetWidth - elemen.offsetLeft
+	novaRiska = novaRiska  + plocha.offsetLeft;
+}
+if (minimalnaVelkostOkna >= novaRiska ){
+	novaRiska = minimalnaVelkostOkna;
+}
+elemen.style.width = novaRiska + pixels;
+	okna = elemen.getElementsByClassName('doleHoreStranaHranica');
+	var dlzka = okna.length;
+for (j=0;j<dlzka;j=j+1)
+{
+okna[j].style.width = (novaRiska - velkostHranice * 2);
+okna[j].style.width = okna[j].style.width + pixels;
+}
+var prvy = 0;
+var dva = 2;
+titulok = elemen.getElementsByClassName('titleOfWindow');
+titulok[prvy].style.width=(novaRiska-velkostHranice*dva);
+titulok[prvy].style.width=titulok[prvy].style.width + pixels;
+minimize = elemen.getElementsByClassName('minTlacidlo');
+minimize[prvy].style.marginLeft = (novaRiska - 43*3) + pixels;
+}
+
+var lavahranicaZvec = function(event)
+{
+	event.preventDefault();
+event.stopPropagation();
+  	var useCapture = false;
+	inizializaciaKliku(this);
+		lastMouseXCord = event.clientX;
+  	lastMouseYCord = event.clientY;
+	window.addEventListener(mouseUpEvent, mysHoreCall,useCapture);
+	window.addEventListener(mousemoveEvent,lavaHranicaZvecPosun,useCapture);
+}
+
+var lavaHranicaZvecPosun=function(event)
+{
+event.preventDefault();
+event.stopPropagation();
+var elementos = elemen.style.left;
+var stareVlavo = parseFloat(elementos);
+var noveVlavo = event.clientX;
+var velkost2 = 2;
+if ((plochaLeftMinimum)>(noveVlavo))
+{
+noveVlavo = plochaLeftMinimum;
+}
+var novaSirka = elemen.offsetWidth;
+novaSirka = novaSirka  + (stareVlavo - noveVlavo);  
+if (minimalnaVelkostOkna<novaSirka)
+{
+elemen.style.left =(noveVlavo + pixels);     
+	
+okna = elemen.getElementsByClassName('doleHoreStranaHranica');
+elemen.style.width = novaSirka + pixels;
+var dlzka = okna.length;
+for (j=0;j<dlzka;j=j+1){
+		windows[j].style.width = (novaSirka-(velkostHranice*velkost2)) ;
+		windows[j].style.width = windows[j].style.width + pixels;
+}
+var prvy = 0;
+titulok = elemen.getElementsByClassName('titleOfWindow');
+titulok[prvy].style.width = (novaSirka - velkostHranice * velkost2) + pixels;
+minimalizovane = elemen.getElementsByClassName('minTlacidlo');
+var tri = 3;
+minimalizovane[prvy].style.marginLeft = (novaSirka - (43*tri));
+minimalizovane[prvy].style.marginLeft = minimalizovane[prvy].style.marginLeft + pixels;
+}                          
+}
+
+var doleHranicaZvec=function(event)
+{
+event.preventDefault();
+event.stopPropagation();
+inizializaciaKliku(this);
+var useCapture = false;
+window.addEventListener(mousemoveEvent,doleHranicaZvecPosun,useCapture);
+lastMouseYCord = event.clientY;
+window.addEventListener(mouseUpEvent,mysHoreCall,useCapture);
+lastMouseXCord = event.clientX;
+}
+
+var doleHranicaZvecPosun=function(event)
+{
+event.preventDefault();
+event.stopPropagation();
+var velkost2=2;
+var novaVyska = (elemen.offsetHeight+event.clientY);
+novaVyska = (novaVyska-lastMouseYCord);
+lastMouseYCord = event.clientY;
+if (minimalnaVelkostOkna <= novaVyska)
+{
+novaVyska=(minimalnaVelkostOkna);
+}
+var pom1 = novaVyska + elemen.offsetTop;
+var pom2 = plocha.offsetHeight + plocha.offsetTop;
+if ((pom1)<=(pom2)){
+novaVyska =(plocha.offsetHeight - elemen.offsetTop);
+novaVyska = novaVyska + plocha.offsetTop;
+}
+elemen.style.height = novaVyska + pixels;
+okna=elemen.getElementsByClassName('lavaPravaStranaHranica');
+var dlzka = okna.length;
+for (j=0;j<dlzka;j=j+1)
+{
+	windows[j].style.height=(novaVyska -(velkostHranice * velkost2));
+	windows[j].style.height=(windows[j].style.height + pixels);
+}
+}
+
+var horeHranicaZvec = function(event) {
+event.preventDefault();
+event.stopPropagation();
+var useCapture = false;
+window.addEventListener(mousemoveEvent,horeHranicaZvecPosun,useCapture);
+inizializaciaKliku(this);
+window.addEventListener(mouseUpEvent,mysHoreCall,useCapture);
+lastMouseXCord=(event.clientX);
+lastMouseYCord=(event.clientY);
+}
+
+//funkcia ktora zvecsi hornu hranicu
+var horeHranicaZvecPosun=function(event)
+{
+//zastav eventu
+event.preventDefault();
+event.stopPropagation();
+// naparsuj hodnotu
+var topVal = elemen.style.top;
+var oldVal=(parseInt(topVal));
+var newVal=(event.clientY);
+if(plochaHoreMinimum>newVal)
+{
+newVal=plochaHoreMinimum;
+}
+var pixels = 'px';
+//skalkuluj novu vysku
+var novaVyska =(elemen.offsetHeight) ;
+novaVyska = novaVyska + (oldVal - newVal);
+var velkost = 2;
+if (novaVyska > minimalnaVelkostOkna) {
+	elemen.style.top = newVal + pixels;     
+	elemen.style.height = novaVyska + pixels;
+	okna = elemen.getElementsByClassName('lavaPravaStranaHranica');
+	var dlzka = okna.length;
+	for (j=0;j<dlzka;j=j+1)
+	{
+		okna[j].style.height = (novaVyska - velkostHranice * velkost);
+		okna[j].style.height = (okna[j].style.height) + pixels;
 	}
 }
+}
+
+
+
+function pridatHraniceKOKnu(elemen) {
+	var elementDiv = 'div';
+	var horeVlavoHranica = document.createElement(elementDiv);
+	var classAtribut = 'class';
+	var pixels = 'px';
+	var border = 'hranica';
+	var divElement = 'div';
+    var pom1 =  'hranica rohHranica horeVlavoHranica';
+    var dvojka = 2;
+	horeVlavoHranica.setAttribute(classAtribut, pom1);
+	horeVlavoHranica.style.height=velkostHranice+(pixels);
+	horeVlavoHranica.style.width = velkostHranice+(pixels);
+	elemen.appendChild(horeVlavoHranica);
+
+	var horeHranica = document.createElement(divElement);
+	var pom1 = 'hranica doleHoreStranaHranica horeHranica';
+	horeHranica.setAttribute(classAtribut, pom1);
+	horeHranica.style.width = (elemen.offsetWidth - velkostHranice * dvojka) + pixels;
+	horeHranica.style.height = velkostHranice + pixels;
+	elemen.appendChild(horeHranica);
+
+	var horeVpravoHranica = document.createElement(divElement);
+	pom1 = 'hranica rohHranica horeVpravoHranica';
+
+	horeVpravoHranica.setAttribute(classAtribut, pom1);
+	horeVpravoHranica.style.width = velkostHranice + pixels;
+	horeVpravoHranica.style.height = velkostHranice + pixels;
+	elemen.appendChild(horeVpravoHranica);
+
+	pridanieClearu(elemen);
+
+	var lavaHranica = document.createElement(divElement);
+	var pom1= 'hranica lavaPravaStranaHranica lavaHranica';
+	lavaHranica.setAttribute(classAtribut, pom1);
+	lavaHranica.style.width = velkostHranice + pixels;
+	lavaHranica.style.height = (elemen.offsetHeight - velkostHranice * dvojka) + pixels;
+	
+	elemen.appendChild(lavaHranica);
+	
+	pridatTitulok(elemen);
+
+	var pravaHranica = document.createElement(divElement);
+	var pom2 =  'hranica lavaPravaStranaHranica pravaHranica';
+	pravaHranica.setAttribute(classAtribut, pom2);
+	pravaHranica.style.width = velkostHranice + pixels;
+	pravaHranica.style.height = (elemen.offsetHeight - velkostHranice * dvojka) + pixels;
+
+	elemen.appendChild(pravaHranica);
+
+	pridanieClearu(elemen);
+	
+	var doleVlavoHranica = document.createElement(divElement);
+	var pom3 = 'hranica rohHranica doleVlavoHranica';
+	doleVlavoHranica.setAttribute(classAtribut, pom3);
+	doleVlavoHranica.style.width = velkostHranice + pixels;
+	doleVlavoHranica.style.height = velkostHranice + pixels;
+	elemen.appendChild(doleVlavoHranica);
+	pridanieClearu(elemen);
+	var doleHranica = document.createElement(divElement);
+	var pom4 = 'hranica doleHoreStranaHranica doleHranica';
+	doleHranica.setAttribute(classAtribut, pom4);
+	doleHranica.style.width = (elemen.offsetWidth - velkostHranice * dvojka); + pixels
+	doleHranica.style.height = velkostHranice + pixels;
+	elemen.appendChild(doleHranica);
+
+	pridanieClearu(elemen);
+	var doleVpravoHranica = document.createElement(divElement);
+	var pom5 = 'hranica rohHranica doleVpravoHranica';
+	doleVpravoHranica.setAttribute(classAtribut, pom5 );
+	doleVpravoHranica.style.width = velkostHranice; + pixels
+	doleVpravoHranica.style.height = velkostHranice + pixels;
+	
+	elemen.appendChild(doleVpravoHranica);
+}
+
+//pridanie titulku
+function pridatTitulok(elemen)
+{
+	var divElement = 'div';
+	var classAtribut = 'class';
+	var pixels = 'px';
+	var dvojka =2;
+	var trojka = 3;
+	var image = 'img';
+	var useCapture = false;
+	var imageMinizeButton = 'image/minimize_but.png'; 
+	var imageMaximizeButton = 'image/maximize_but.png';
+	var imageCloseBut = 'image/close_but.png';
+
+	var titulok = document.createElement(divElement);
+	titulok.setAttribute(classAtribut,'titleOfWindow');
+	var width = (elemen.offsetWidth - velkostHranice*dvojka) + pixels;
+	titulok.style.width = width;
+
+	elemen.appendChild(titulok);
+
+	var minImage = document.createElement(image);
+	minImage.src = imageMinizeButton;
+	minImage.setAttribute(classAtribut, 'ikona minTlacidlo');
+	minImage.addEventListener(click, minimalizovatOkno, useCapture);
+	titulok.appendChild(minImage);
+
+	var maximImage = document.createElement(image);
+	maximImage.src = imageMaximizeButton;
+	maximImage.setAttribute(classAtribut, 'ikona maximalTlacidlo');
+	maximImage.addEventListener(click, maxilazaciaOkna, useCapture);
+	titulok.appendChild(maximImage);
+
+	var zavrietImage = document.createElement(image);
+	zavrietImage.src = imageCloseBut;
+	zavrietImage.setAttribute(classAtribut, 'ikona zavrieteTlacidlo');
+	zavrietImage.addEventListener(click, zavrietWindow, useCapture);
+	titulok.appendChild(zavrietImage);
+
+	elemWidth = elemen.offsetWidth;
+	minImage.style.marginLeft = (elemWidth-43*trojka)+pixels;
+}
+
+//inicializacia premennych
+document.onreadystatechange = (inicializacia)  ;
+
+var mousemoveEvent = 'mousemove';
+var mouseUpEvent = 'mouseup';
+
+//inicializacia globalnych premennych
+var lastMouseXCord = 0;
+var lastMouseYCord = 0;
+var xShift = 0;
+var yShift = 0;
+var elemen;
+var plocha;
+var plochaLeftMinimum = 0;
+var plochaLeftMax = 0;
+var plochaHoreMinimum = 0;
+var plochaHoreMaximum = 0;
+var minimalnaVelkostOkna = 300;
+var velkostHranice = 10;
+var poslednaSirka = 0;
+var posledneDolava = 0;
+var oknaVBare = 0;
+var maximalizovaneOkna = 0;
+var pixels = 'px';
+var click = 'click';
+var classAttr = 'class';
+var windowAttr = 'window';
